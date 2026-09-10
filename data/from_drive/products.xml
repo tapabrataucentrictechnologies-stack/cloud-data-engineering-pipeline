@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+    <product>
+        <product_id>2001</product_id>
+        <product_name>Laptop</product_name>
+        <category>Electronics</category>
+    </product>
+    <product>
+        <product_id>2002</product_id>
+        <product_name>Smartphone</product_name>
+        <category>Electronics</category>
+    </product>
+    <product>
+        <product_id>2003</product_id>
+        <product_name>Keyboard</product_name>
+        <category>Accessories</category>
+    </product>
+    <product>
+        <product_id>2004</product_id>
+        <product_name>Monitor</product_name>
+        <category>Electronics</category>
+    </product>
+    <product>
+        <product_id>2005</product_id>
+        <product_name>Mouse</product_name>
+        <category>Accessories</category>
+    </product>
+</products>

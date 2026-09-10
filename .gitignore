@@ -76,3 +76,7 @@ htmlcov/
 # =========================
 
 .ipynb_checkpoints/
+
+# Google Drive OAuth
+credentials.json
+token.json

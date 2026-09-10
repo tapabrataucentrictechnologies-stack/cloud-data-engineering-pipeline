@@ -1,0 +1,16 @@
+customer_id,name,email,city,country,signup_date
+1001,John Smith,john@example.com,London,UK,2025-01-15
+1002,Sarah Jones,sarah@example.com,Manchester,UK,2025-01-20
+1003,David Brown,david@example.com,New York,USA,2025-02-02
+1004,Emma Wilson,emma@example.com,Toronto,Canada,2025-02-10
+1005,Michael Taylor,michael@example.com,Mumbai,India,2025-02-18
+1006,Olivia Davis,olivia@example.com,Sydney,Australia,2025-03-01
+1007,James Miller,james@example.com,Birmingham,UK,2025-03-05
+1008,Sophia Moore,sophia@example.com,Delhi,India,2025-03-12
+1009,Daniel Anderson,daniel@example.com,Chicago,USA,2025-03-20
+1010,Ava Thomas,ava@example.com,Paris,France,2025-03-25
+1005,Michael Taylor,michael@example.com,Mumbai,India,2025-02-18
+1011,Noah Jackson,,Kolkata,India,2025-04-01
+1012,Liam White,liam@example.com,London,UK,2025-04-10
+1013,Isabella Harris,isabella@example.com,New York,USA,2025-04-15
+1014,Lucas Martin,lucas@example.com,Paris,France,2025-04-20
