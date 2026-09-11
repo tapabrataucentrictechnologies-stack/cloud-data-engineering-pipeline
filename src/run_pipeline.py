@@ -2,7 +2,7 @@ import csv
 import os
 import sys
 from pathlib import Path
-
+from src.warehouse.bigquery_loader import load_all_tables
 
 # --------------------------------------------------
 # Project paths
@@ -375,9 +375,7 @@ def main():
         # 5. Save processed datasets
         # --------------------------------------------------
 
-        print(
-            "\n[5/5] Saving processed datasets..."
-        )
+        print("\n[5/5] Saving processed datasets...")
 
         PROCESSED_DIRECTORY.mkdir(
             parents=True,
@@ -428,38 +426,23 @@ def main():
         )
 
 
-        print(
-            "\nProcessed datasets saved:"
-        )
+        print("\nProcessed datasets saved:")
+        print(f"  - {customers_output}")
+        print(f"  - {orders_output}")
+        print(f"  - {products_output}")
 
-        print(
-            f"  - {customers_output}"
-        )
-
-        print(
-            f"  - {orders_output}"
-        )
-
-        print(
-            f"  - {products_output}"
-        )
+        print("\n[6/6] Loading processed data into BigQuery...")
+        bigquery_results = load_all_tables()
+        print("\nBigQuery warehouse load completed.")
 
 
         # --------------------------------------------------
         # Pipeline completed
         # --------------------------------------------------
 
-        print(
-            "\n" + "=" * 60
-        )
-
-        print(
-            "PIPELINE COMPLETED SUCCESSFULLY"
-        )
-
-        print(
-            "=" * 60
-        )
+        print("\n" + "=" * 60)
+        print("END-TO-END PIPELINE COMPLETED SUCCESSFULLY")
+        print("=" * 60)
 
 
     finally:
