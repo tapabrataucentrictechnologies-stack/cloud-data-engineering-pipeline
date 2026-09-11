@@ -1,40 +1,65 @@
 from pathlib import Path
 
+import httplib2
+
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from google_auth_httplib2 import AuthorizedHttp
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 
-# Permissions required by this application.
+# --------------------------------------------------
+# Google Drive permissions
+# --------------------------------------------------
+
 SCOPES = [
     "https://www.googleapis.com/auth/drive.file"
 ]
 
 
-# Project root directory.
+# --------------------------------------------------
+# Project paths
+# --------------------------------------------------
+
 BASE_DIR = Path(__file__).resolve().parents[2]
 
 
-# OAuth credential files.
 CREDENTIALS_FILE = (
     BASE_DIR / "credentials.json"
 )
+
 
 TOKEN_FILE = (
     BASE_DIR / "token.json"
 )
 
 
-def get_drive_service():
+# --------------------------------------------------
+# HTTP configuration
+# --------------------------------------------------
+
+# Google Drive downloads can occasionally take
+# longer than the default HTTP timeout.
+HTTP_TIMEOUT = 300
+
+
+# --------------------------------------------------
+# Authentication
+# --------------------------------------------------
+
+def get_drive_credentials():
     """
-    Authenticate the user and create
-    a Google Drive API service.
+    Authenticate the user and return
+    Google Drive OAuth credentials.
     """
 
     credentials = None
 
-    # Reuse previously generated OAuth token.
+    # --------------------------------------------------
+    # Reuse existing OAuth token
+    # --------------------------------------------------
+
     if TOKEN_FILE.exists():
 
         credentials = (
@@ -44,7 +69,10 @@ def get_drive_service():
             )
         )
 
-    # Refresh expired credentials.
+    # --------------------------------------------------
+    # Refresh expired credentials
+    # --------------------------------------------------
+
     if credentials and credentials.expired:
 
         if credentials.refresh_token:
@@ -53,8 +81,10 @@ def get_drive_service():
                 Request()
             )
 
-    # Start OAuth flow if authentication
-    # is missing or invalid.
+    # --------------------------------------------------
+    # Start OAuth flow if required
+    # --------------------------------------------------
+
     if not credentials or not credentials.valid:
 
         if not CREDENTIALS_FILE.exists():
@@ -78,21 +108,53 @@ def get_drive_service():
             )
         )
 
-        # Save the authentication token
-        # for future runs.
+        # Save token for future runs.
         TOKEN_FILE.write_text(
-            credentials.to_json()
+            credentials.to_json(),
+            encoding="utf-8"
         )
 
-    # Create Google Drive API client.
+    return credentials
+
+
+# --------------------------------------------------
+# Google Drive service
+# --------------------------------------------------
+
+def get_drive_service():
+    """
+    Authenticate the user and create
+    a Google Drive API service with
+    an extended HTTP timeout.
+    """
+
+    credentials = get_drive_credentials()
+
+    # Create an HTTP client with a longer timeout.
+    http = httplib2.Http(
+        timeout=HTTP_TIMEOUT
+    )
+
+    # Authorize the HTTP client.
+    authorized_http = AuthorizedHttp(
+        credentials,
+        http=http
+    )
+
+    # Create the Google Drive service.
     service = build(
         "drive",
         "v3",
-        credentials=credentials
+        http=authorized_http,
+        cache_discovery=False
     )
 
     return service
 
+
+# --------------------------------------------------
+# Upload file
+# --------------------------------------------------
 
 def upload_file(
     local_file_path: str,
@@ -134,6 +196,10 @@ def upload_file(
     return uploaded_file["id"]
 
 
+# --------------------------------------------------
+# List files
+# --------------------------------------------------
+
 def list_files(
     folder_id: str
 ) -> list[dict]:
@@ -153,7 +219,8 @@ def list_files(
         .list(
             q=query,
             spaces="drive",
-            fields="files(id,name)"
+            fields="files(id,name)",
+            pageSize=100
         )
         .execute()
     )
@@ -164,15 +231,18 @@ def list_files(
     )
 
 
+# --------------------------------------------------
+# Download file
+# --------------------------------------------------
+
 def download_file(
     file_id: str,
     local_file_path: str
 ) -> str:
     """
-    Download a Google Drive file.
+    Download a Google Drive file with
+    retry support and an extended timeout.
     """
-
-    import io
 
     from googleapiclient.http import (
         MediaIoBaseDownload
@@ -196,6 +266,7 @@ def download_file(
         exist_ok=True
     )
 
+    # Write the file from the beginning.
     with destination.open(
         "wb"
     ) as file_handle:
@@ -203,7 +274,8 @@ def download_file(
         downloader = (
             MediaIoBaseDownload(
                 file_handle,
-                request
+                request,
+                chunksize=1024 * 1024
             )
         )
 
@@ -211,8 +283,21 @@ def download_file(
 
         while not done:
 
-            _, done = (
-                downloader.next_chunk()
+            status, done = (
+                downloader.next_chunk(
+                    num_retries=5
+                )
             )
+
+            if status:
+
+                progress = int(
+                    status.progress() * 100
+                )
+
+                print(
+                    f"    Download progress: "
+                    f"{progress}%"
+                )
 
     return str(destination)
