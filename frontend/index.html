@@ -2,299 +2,822 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Cloud Data Engineering Pipeline</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <title>
+        Cloud Data Engineering Pipeline
+    </title>
 
-    <link rel="stylesheet" href="style.css">
+
+    <!-- Bootstrap -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    >
+
+
+    <!-- Project stylesheet -->
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <div class="app">
+<div class="app">
 
-        <!-- Sidebar -->
-        <aside class="sidebar">
 
-            <div class="logo">
-                <span class="logo-icon">☁</span>
-                <span>Cloud Data Pipeline</span>
-            </div>
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
-            <nav>
+    <aside class="sidebar">
 
-                <a href="#" class="nav-item active">
-                    <span>▣</span>
-                    Dashboard
-                </a>
+        <div class="logo">
 
-                <a href="#" class="nav-item">
-                    <span>◈</span>
-                    Data Pipeline
-                </a>
+            <span class="logo-icon">
+                ☁
+            </span>
 
-                <a href="#" class="nav-item">
-                    <span>✓</span>
-                    Data Quality
-                </a>
+            <span>
+                Cloud Data Pipeline
+            </span>
 
-                <a href="#" class="nav-item">
-                    <span>▣</span>
-                    BigQuery
-                </a>
+        </div>
 
-                <a href="#" class="nav-item">
-                    <span>▥</span>
-                    Analytics
-                </a>
 
-                <a href="#" class="nav-item">
-                    <span>⚙</span>
-                    Settings
-                </a>
+        <nav>
 
-            </nav>
+            <a
+                href="#"
+                class="nav-item active"
+            >
+                <span>▣</span>
+                Dashboard
+            </a>
 
-            <div class="sidebar-footer">
-                <p>End-to-End Cloud Data Engineering Pipeline</p>
-                <small>PySpark | BigQuery | Power BI</small>
-            </div>
 
-        </aside>
+            <a
+                href="#pipelineSection"
+                class="nav-item"
+            >
+                <span>◈</span>
+                Data Pipeline
+            </a>
 
 
-        <!-- Main Content -->
-        <main class="main-content">
+            <a
+                href="#qualitySection"
+                class="nav-item"
+            >
+                <span>✓</span>
+                Data Quality
+            </a>
 
-            <!-- Header -->
-            <header class="top-header">
 
-                <div>
-                    <h1>End-to-End Cloud Data Engineering Pipeline</h1>
+            <a
+                href="#bigquerySection"
+                class="nav-item"
+            >
+                <span>▣</span>
+                BigQuery
+            </a>
 
-                    <p>
-                        From raw data to business insights —
-                        powered by PySpark, BigQuery and Power BI.
-                    </p>
-                </div>
 
-                <div class="pipeline-status">
-                    <span class="status-dot"></span>
+            <a
+                href="#analyticsSection"
+                class="nav-item"
+            >
+                <span>▥</span>
+                Analytics
+            </a>
 
-                    <div>
-                        <strong>Pipeline Completed</strong>
-                        <small>Ready for execution</small>
-                    </div>
-                </div>
 
-            </header>
+            <a
+                href="#"
+                class="nav-item"
+            >
+                <span>⚙</span>
+                Settings
+            </a>
 
+        </nav>
 
-            <!-- KPI Cards -->
-            <section class="kpi-grid">
 
-                <div class="kpi-card">
-                    <div class="kpi-icon blue">👥</div>
+        <div class="sidebar-footer">
 
-                    <div>
-                        <h3>Total Customers</h3>
-                        <strong id="customerCount"></strong>
-                        
-                    </div>
-                </div>
+            <p>
+                End-to-End Cloud Data Engineering Pipeline
+            </p>
 
+            <small>
+                PySpark | BigQuery | Power BI
+            </small>
 
-                <div class="kpi-card">
-                    <div class="kpi-icon green">▣</div>
+        </div>
 
-                    <div>
-                        <h3>Total Orders</h3>
-                        <strong id="orderCount"></strong>
-                        
-                    </div>
-                </div>
+    </aside>
 
 
-                <div class="kpi-card">
-                    <div class="kpi-icon purple">◈</div>
-
-                    <div>
-                        <h3>Total Products</h3>
-                        <strong id="productCount"></strong>
-                        
-                    </div>
-                </div>
-
-
-                <div class="kpi-card">
-                    <div class="kpi-icon orange">₹</div>
-
-                    <div>
-                        <h3>Total Revenue</h3>
-                        <strong id="revenueValue"></strong>
-                        
-                    </div>
-                </div>
-
-            </section>
-
-
-            <!-- Pipeline -->
-            <section class="section-card">
-
-                <div class="section-header">
-                    <div>
-                        <h2>Data Pipeline</h2>
-                        <p>Current pipeline execution stages</p>
-                    </div>
-
-                    <!-- <button id="runPipelineBtn" class="run-button">
-                        Run Pipeline
-                    </button> -->
-                </div>
-
-
-                <div class="pipeline-flow">
-
-                    <div class="pipeline-step completed">
-                        <span>1</span>
-                        <strong>Raw Data</strong>
-                        <small>Google Drive</small>
-                    </div>
-
-                    <div class="arrow">→</div>
-
-                    <div class="pipeline-step completed">
-                        <span>2</span>
-                        <strong>PySpark</strong>
-                        <small>Transform</small>
-                    </div>
-
-                    <div class="arrow">→</div>
-
-                    <div class="pipeline-step completed">
-                        <span>3</span>
-                        <strong>Validation</strong>
-                        <small>Data Quality</small>
-                    </div>
-
-                    <div class="arrow">→</div>
-
-                    <div class="pipeline-step completed">
-                        <span>4</span>
-                        <strong>BigQuery</strong>
-                        <small>Warehouse</small>
-                    </div>
-
-                    <div class="arrow">→</div>
-
-                    <div class="pipeline-step">
-                        <span>5</span>
-                        <strong>Analytics</strong>
-                        <small>SQL / Power BI</small>
-                    </div>
-
-                </div>
-
-            </section>
-
-            <!-- Charts -->
-            <section class="charts-grid">
-                <div class="chart-card">
-                    <div class="section-header">
-                        <div>
-                            <h2>Revenue Over Time</h2>
-                            <p>Sales performance from BigQuery</p>
-                        </div>
-                    </div>
-                    <div class="chart-placeholder">
-                        <div class="fake-chart" id="revenueChart"></div>
-                        <div class="chart-labels" id="revenueChartLabels"></div>
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="section-header">
-                        <div>
-                            <h2>Revenue by Product</h2>
-                            <p>Top products by revenue</p>
-                        </div>
-                    </div>
-                    <div class="bar-chart" id="productChart"></div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="section-header">
-                        <div>
-                            <h2>Revenue by Customer</h2>
-                            <p>Top customers by revenue</p>
-                        </div>
-                    </div>
-                    <div class="bar-chart" id="customerChart"></div>
-                </div>
-
-            </section>
-
-
-            <!-- Data Quality -->
-            <section class="section-card">
-
-                <div class="section-header">
-                    <div>
-                        <h2>Data Quality Status</h2>
-                        <p>Validation results from the pipeline</p>
-                    </div>
-                </div>
-
-
-                <div class="quality-grid">
-
-                    <div class="quality-item">
-                        <strong>Customers</strong>
-                        <span class="passed">✓ Passed</span>
-                        <small>14 rows</small>
-                    </div>
-
-                    <div class="quality-item">
-                        <strong>Orders</strong>
-                        <span class="passed">✓ Passed</span>
-                        <small>10 rows</small>
-                    </div>
-
-                    <div class="quality-item">
-                        <strong>Products</strong>
-                        <span class="passed">✓ Passed</span>
-                        <small>5 rows</small>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- Footer -->
-            <footer>
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <header class="top-header">
+
+            <div>
+
+                <h1>
+                    End-to-End Cloud Data Engineering Pipeline
+                </h1>
 
                 <p>
-                    End-to-End Cloud Data Engineering Pipeline
+                    From raw data to business insights —
+                    powered by PySpark, BigQuery and Power BI.
                 </p>
 
-                <span>
-                    PySpark • BigQuery • SQL • Power BI
+            </div>
+
+
+            <!-- Dynamic pipeline status -->
+
+            <div class="pipeline-status">
+
+                <span
+                    class="status-dot"
+                    id="statusDot"
+                ></span>
+
+
+                <div>
+
+                    <strong id="pipelineStatusText">
+                        Ready for execution
+                    </strong>
+
+                    <small id="pipelineStatusSubtext">
+                        Select a dataset to begin
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             DATASET SELECTION
+        ================================================== -->
+
+        <section
+            class="section-card"
+            id="datasetSection"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Select Dataset
+                    </h2>
+
+                    <p>
+                        Choose a supported file from Google Drive
+                        to run through the data pipeline.
+                    </p>
+
+                </div>
+
+
+                <button
+                    id="refreshFilesBtn"
+                    class="run-button"
+                    type="button"
+                >
+                    ↻ Refresh Files
+                </button>
+
+            </div>
+
+
+            <!-- Loading message -->
+
+            <div
+                id="filesLoading"
+                class="pipeline-message"
+            >
+                Loading files from Google Drive...
+            </div>
+
+
+            <!-- File selection -->
+
+            <div
+                id="fileList"
+                class="file-list"
+            ></div>
+
+
+            <!-- Selected file -->
+
+            <div
+                id="selectedFileInfo"
+                class="selected-file-info"
+                style="display: none;"
+            >
+
+                <strong>
+                    Selected dataset:
+                </strong>
+
+                <span id="selectedFileName">
+                    -
                 </span>
 
-            </footer>
-
-        </main>
-
-    </div>
+            </div>
 
 
-    <script src="app.js"></script>
+            <!-- Run button -->
+
+            <div class="pipeline-action">
+
+                <button
+                    id="runPipelineBtn"
+                    class="run-button"
+                    type="button"
+                    disabled
+                >
+                    ▶ Run Pipeline
+                </button>
+
+            </div>
+
+
+            <!-- Pipeline message -->
+
+            <div
+                id="pipelineMessage"
+                class="pipeline-message"
+                style="display: none;"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PIPELINE RESULT
+        ================================================== -->
+
+        <section
+            class="section-card"
+            id="resultSection"
+            style="display: none;"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Pipeline Result
+                    </h2>
+
+                    <p>
+                        Output from the latest pipeline execution.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="result-grid">
+
+
+                <div class="result-item">
+
+                    <span>
+                        Source File
+                    </span>
+
+                    <strong id="resultSourceFile">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>
+                        Processed File
+                    </span>
+
+                    <strong id="resultProcessedFile">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div
+                    class="result-item"
+                    id="bigquerySection"
+                >
+
+                    <span>
+                        BigQuery Table
+                    </span>
+
+                    <strong id="resultBigQueryTable">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>
+                        Rows Loaded
+                    </span>
+
+                    <strong id="resultRowsLoaded">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             KPI CARDS
+        ================================================== -->
+
+        <section class="kpi-grid">
+
+
+            <!-- Customers -->
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon blue">
+                    👥
+                </div>
+
+                <div>
+
+                    <h3>
+                        Total Customers
+                    </h3>
+
+                    <strong id="customerCount">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Orders -->
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon green">
+                    ▣
+                </div>
+
+                <div>
+
+                    <h3>
+                        Total Orders
+                    </h3>
+
+                    <strong id="orderCount">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Products -->
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon purple">
+                    ◈
+                </div>
+
+                <div>
+
+                    <h3>
+                        Total Products
+                    </h3>
+
+                    <strong id="productCount">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Revenue -->
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon orange">
+                    ₹
+                </div>
+
+                <div>
+
+                    <h3>
+                        Total Revenue
+                    </h3>
+
+                    <strong id="revenueValue">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PIPELINE FLOW
+        ================================================== -->
+
+        <section
+            class="section-card"
+            id="pipelineSection"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Data Pipeline
+                    </h2>
+
+                    <p>
+                        Current pipeline execution stages
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="pipeline-flow">
+
+
+                <div
+                    class="pipeline-step completed"
+                    id="stageRaw"
+                >
+
+                    <span>1</span>
+
+                    <strong>
+                        Raw Data
+                    </strong>
+
+                    <small>
+                        Google Drive
+                    </small>
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+
+                <div
+                    class="pipeline-step"
+                    id="stageSpark"
+                >
+
+                    <span>2</span>
+
+                    <strong>
+                        PySpark
+                    </strong>
+
+                    <small>
+                        Transform
+                    </small>
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+
+                <div
+                    class="pipeline-step"
+                    id="stageValidation"
+                >
+
+                    <span>3</span>
+
+                    <strong>
+                        Validation
+                    </strong>
+
+                    <small>
+                        Data Quality
+                    </small>
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+
+                <div
+                    class="pipeline-step"
+                    id="stageBigQuery"
+                >
+
+                    <span>4</span>
+
+                    <strong>
+                        BigQuery
+                    </strong>
+
+                    <small>
+                        Warehouse
+                    </small>
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+
+                <div
+                    class="pipeline-step"
+                    id="stageAnalytics"
+                >
+
+                    <span>5</span>
+
+                    <strong>
+                        Analytics
+                    </strong>
+
+                    <small>
+                        SQL / Power BI
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ANALYTICS
+        ================================================== -->
+
+        <section
+            class="charts-grid"
+            id="analyticsSection"
+        >
+
+
+            <!-- Revenue over time -->
+
+            <div class="chart-card">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Revenue Over Time
+                        </h2>
+
+                        <p>
+                            Sales performance from BigQuery
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-placeholder">
+
+                    <div
+                        class="fake-chart"
+                        id="revenueChart"
+                    ></div>
+
+
+                    <div
+                        class="chart-labels"
+                        id="revenueChartLabels"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Revenue by product -->
+
+            <div class="chart-card">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Revenue by Product
+                        </h2>
+
+                        <p>
+                            Top products by revenue
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="bar-chart"
+                    id="productChart"
+                ></div>
+
+            </div>
+
+
+
+            <!-- Revenue by customer -->
+
+            <div class="chart-card">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Revenue by Customer
+                        </h2>
+
+                        <p>
+                            Top customers by revenue
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="bar-chart"
+                    id="customerChart"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             DATA QUALITY
+        ================================================== -->
+
+        <section
+            class="section-card"
+            id="qualitySection"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Data Quality Status
+                    </h2>
+
+                    <p>
+                        Validation results from the pipeline
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="quality-grid"
+                id="qualityGrid"
+            >
+
+                <div class="quality-item">
+
+                    <strong>
+                        Pipeline
+                    </strong>
+
+                    <span class="passed">
+                        ✓ Ready
+                    </span>
+
+                    <small>
+                        Waiting for execution
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer>
+
+            <p>
+                End-to-End Cloud Data Engineering Pipeline
+            </p>
+
+            <span>
+                PySpark • BigQuery • SQL • Power BI
+            </span>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     APPLICATION JAVASCRIPT
+========================================================== -->
+
+<script src="app.js"></script>
 
 </body>
 

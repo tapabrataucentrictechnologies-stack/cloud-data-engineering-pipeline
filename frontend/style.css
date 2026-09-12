@@ -408,3 +408,240 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* =========================================================
+   DYNAMIC DATASET SELECTION
+========================================================= */
+
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+
+.file-option {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 16px 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+
+.file-option:hover {
+    border-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+
+.file-option.selected {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+
+.file-option input {
+    margin-left: auto;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+
+.file-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #f3f4f6;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+.file-information {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+
+.file-information strong {
+    font-size: 15px;
+}
+
+
+.file-information small {
+    color: #6b7280;
+}
+
+
+.selected-file-info {
+    margin-top: 18px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+
+.selected-file-info span {
+    margin-left: 6px;
+    font-weight: 600;
+}
+
+
+.pipeline-action {
+    margin-top: 20px;
+}
+
+
+.run-button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+.run-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+.pipeline-message {
+    margin-top: 15px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+
+.pipeline-message.success {
+    border-color: #86efac;
+    background: #f0fdf4;
+}
+
+
+.pipeline-message.error {
+    border-color: #fca5a5;
+    background: #fef2f2;
+}
+
+
+.pipeline-message.running {
+    border-color: #93c5fd;
+    background: #eff6ff;
+}
+
+
+/* =========================================================
+   PIPELINE RESULT
+========================================================= */
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        2,
+        minmax(0, 1fr)
+    );
+    gap: 15px;
+}
+
+
+.result-item {
+    padding: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+
+.result-item span {
+    display: block;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 5px;
+}
+
+
+.result-item strong {
+    display: block;
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   PIPELINE STATUS
+========================================================= */
+
+.status-dot.status-running {
+    animation: pipelinePulse 1s infinite;
+}
+
+
+.status-dot.status-completed {
+    background: #22c55e;
+}
+
+
+.status-dot.status-error {
+    background: #ef4444;
+}
+
+
+@keyframes pipelinePulse {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.35;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+
+/* =========================================================
+   PIPELINE STAGES
+========================================================= */
+
+.pipeline-step.running {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px #dbeafe;
+}
+
+
+.pipeline-step.failed {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px #fee2e2;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
