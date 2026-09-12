@@ -9,56 +9,62 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 
-# --------------------------------------------------
-# Google Drive permissions
-# --------------------------------------------------
+# ============================================================
+# GOOGLE DRIVE PERMISSIONS
+# ============================================================
 
 SCOPES = [
-    "https://www.googleapis.com/auth/drive.file"
+    "https://www.googleapis.com/auth/drive"
 ]
 
 
-# --------------------------------------------------
-# Project paths
-# --------------------------------------------------
+# ============================================================
+# PROJECT PATHS
+# ============================================================
 
-BASE_DIR = Path(__file__).resolve().parents[2]
+BASE_DIR = (
+    Path(__file__)
+    .resolve()
+    .parents[2]
+)
 
 
 CREDENTIALS_FILE = (
-    BASE_DIR / "credentials.json"
+    BASE_DIR
+    / "credentials.json"
 )
 
 
 TOKEN_FILE = (
-    BASE_DIR / "token.json"
+    BASE_DIR
+    / "token.json"
 )
 
 
-# --------------------------------------------------
-# HTTP configuration
-# --------------------------------------------------
+# ============================================================
+# HTTP CONFIGURATION
+# ============================================================
 
-# Google Drive downloads can occasionally take
-# longer than the default HTTP timeout.
 HTTP_TIMEOUT = 300
 
 
-# --------------------------------------------------
-# Authentication
-# --------------------------------------------------
+# ============================================================
+# AUTHENTICATION
+# ============================================================
 
 def get_drive_credentials():
     """
-    Authenticate the user and return
-    Google Drive OAuth credentials.
+    Authenticate with Google Drive.
+
+    Existing OAuth credentials are reused whenever
+    possible. Expired credentials are refreshed.
     """
 
     credentials = None
 
-    # --------------------------------------------------
-    # Reuse existing OAuth token
-    # --------------------------------------------------
+    # --------------------------------------------------------
+    # Load existing token
+    # --------------------------------------------------------
 
     if TOKEN_FILE.exists():
 
@@ -69,23 +75,28 @@ def get_drive_credentials():
             )
         )
 
-    # --------------------------------------------------
-    # Refresh expired credentials
-    # --------------------------------------------------
+    # --------------------------------------------------------
+    # Refresh expired token
+    # --------------------------------------------------------
 
-    if credentials and credentials.expired:
+    if (
+        credentials
+        and credentials.expired
+        and credentials.refresh_token
+    ):
 
-        if credentials.refresh_token:
+        credentials.refresh(
+            Request()
+        )
 
-            credentials.refresh(
-                Request()
-            )
+    # --------------------------------------------------------
+    # Start OAuth flow when necessary
+    # --------------------------------------------------------
 
-    # --------------------------------------------------
-    # Start OAuth flow if required
-    # --------------------------------------------------
-
-    if not credentials or not credentials.valid:
+    if (
+        not credentials
+        or not credentials.valid
+    ):
 
         if not CREDENTIALS_FILE.exists():
 
@@ -108,7 +119,7 @@ def get_drive_credentials():
             )
         )
 
-        # Save token for future runs.
+        # Save credentials for future requests.
         TOKEN_FILE.write_text(
             credentials.to_json(),
             encoding="utf-8"
@@ -117,31 +128,28 @@ def get_drive_credentials():
     return credentials
 
 
-# --------------------------------------------------
-# Google Drive service
-# --------------------------------------------------
+# ============================================================
+# GOOGLE DRIVE SERVICE
+# ============================================================
 
 def get_drive_service():
     """
-    Authenticate the user and create
-    a Google Drive API service with
-    an extended HTTP timeout.
+    Create an authenticated Google Drive API service.
     """
 
-    credentials = get_drive_credentials()
+    credentials = (
+        get_drive_credentials()
+    )
 
-    # Create an HTTP client with a longer timeout.
     http = httplib2.Http(
         timeout=HTTP_TIMEOUT
     )
 
-    # Authorize the HTTP client.
     authorized_http = AuthorizedHttp(
         credentials,
         http=http
     )
 
-    # Create the Google Drive service.
     service = build(
         "drive",
         "v3",
@@ -152,9 +160,9 @@ def get_drive_service():
     return service
 
 
-# --------------------------------------------------
-# Upload file
-# --------------------------------------------------
+# ============================================================
+# UPLOAD FILE
+# ============================================================
 
 def upload_file(
     local_file_path: str,
@@ -164,14 +172,17 @@ def upload_file(
     """
     Upload a local file to Google Drive.
 
-    Returns the Google Drive file ID.
+    Returns:
+        Google Drive file ID.
     """
 
     from googleapiclient.http import (
         MediaFileUpload
     )
 
-    service = get_drive_service()
+    service = (
+        get_drive_service()
+    )
 
     file_metadata = {
         "name": file_name,
@@ -196,18 +207,29 @@ def upload_file(
     return uploaded_file["id"]
 
 
-# --------------------------------------------------
-# List files
-# --------------------------------------------------
+# ============================================================
+# LIST FILES
+# ============================================================
 
 def list_files(
     folder_id: str
 ) -> list[dict]:
     """
     List files inside a Google Drive folder.
+
+    Returns a list containing:
+        id
+        name
     """
 
-    service = get_drive_service()
+    if not folder_id:
+        raise ValueError(
+            "Google Drive folder ID is required."
+        )
+
+    service = (
+        get_drive_service()
+    )
 
     query = (
         f"'{folder_id}' in parents "
@@ -219,8 +241,9 @@ def list_files(
         .list(
             q=query,
             spaces="drive",
-            fields="files(id,name)",
-            pageSize=100
+            fields="files(id,name,mimeType,size)",
+            pageSize=100,
+            orderBy="name"
         )
         .execute()
     )
@@ -231,24 +254,33 @@ def list_files(
     )
 
 
-# --------------------------------------------------
-# Download file
-# --------------------------------------------------
+# ============================================================
+# DOWNLOAD FILE
+# ============================================================
 
 def download_file(
     file_id: str,
     local_file_path: str
 ) -> str:
     """
-    Download a Google Drive file with
-    retry support and an extended timeout.
+    Download a Google Drive file.
+
+    Returns:
+        Local downloaded file path.
     """
 
     from googleapiclient.http import (
         MediaIoBaseDownload
     )
 
-    service = get_drive_service()
+    if not file_id:
+        raise ValueError(
+            "Google Drive file ID is required."
+        )
+
+    service = (
+        get_drive_service()
+    )
 
     request = (
         service.files()
@@ -266,7 +298,6 @@ def download_file(
         exist_ok=True
     )
 
-    # Write the file from the beginning.
     with destination.open(
         "wb"
     ) as file_handle:

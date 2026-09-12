@@ -3,19 +3,20 @@ from fastapi import APIRouter, HTTPException
 from google.cloud import bigquery
 
 import os
+
 from dotenv import load_dotenv
 
 
-# ---------------------------------------------------------
-# Load environment variables
-# ---------------------------------------------------------
+# ============================================================
+# LOAD ENVIRONMENT VARIABLES
+# ============================================================
 
 load_dotenv()
 
 
-# ---------------------------------------------------------
-# Router configuration
-# ---------------------------------------------------------
+# ============================================================
+# ROUTER CONFIGURATION
+# ============================================================
 
 router = APIRouter(
     prefix="/api/dashboard",
@@ -23,9 +24,9 @@ router = APIRouter(
 )
 
 
-# ---------------------------------------------------------
-# BigQuery configuration
-# ---------------------------------------------------------
+# ============================================================
+# BIGQUERY CONFIGURATION
+# ============================================================
 
 PROJECT_ID = os.getenv(
     "GCP_PROJECT_ID",
@@ -38,26 +39,29 @@ DATASET = os.getenv(
 )
 
 
-# ---------------------------------------------------------
-# BigQuery client
-# ---------------------------------------------------------
+# ============================================================
+# BIGQUERY CLIENT
+# ============================================================
 
 def get_bigquery_client():
+
     return bigquery.Client(
         project=PROJECT_ID
     )
 
 
-# ---------------------------------------------------------
-# Dashboard summary API
-# ---------------------------------------------------------
+# ============================================================
+# DASHBOARD SUMMARY
+# ============================================================
 
 @router.get("/summary")
 def get_dashboard_summary():
 
     try:
 
-        client = get_bigquery_client()
+        client = (
+            get_bigquery_client()
+        )
 
         query = f"""
         SELECT
@@ -109,13 +113,10 @@ def get_dashboard_summary():
         """
 
         result = list(
-            client.query(query).result()
+            client.query(
+                query
+            ).result()
         )
-
-
-        # -------------------------------------------------
-        # Check whether BigQuery returned data
-        # -------------------------------------------------
 
         if not result:
 
@@ -124,13 +125,7 @@ def get_dashboard_summary():
                 detail="No dashboard data found."
             )
 
-
         row = result[0]
-
-
-        # -------------------------------------------------
-        # Return JSON response
-        # -------------------------------------------------
 
         return {
             "success": True,
@@ -158,19 +153,250 @@ def get_dashboard_summary():
 
                 "average_order_value": float(
                     row.average_order_value or 0
-                )
-            }
+                ),
+            },
         }
-
 
     except HTTPException:
         raise
-
 
     except Exception as error:
 
         print(
             "Dashboard summary error:",
+            error
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(error)
+        )
+
+
+# ============================================================
+# REVENUE OVER TIME
+# ============================================================
+
+@router.get("/revenue-over-time")
+def get_revenue_over_time():
+
+    try:
+
+        client = (
+            get_bigquery_client()
+        )
+
+        query = f"""
+            SELECT
+                order_date,
+                ROUND(
+                    SUM(quantity * price),
+                    2
+                ) AS total_revenue
+
+            FROM `{PROJECT_ID}.{DATASET}.orders`
+
+            GROUP BY order_date
+
+            ORDER BY order_date
+        """
+
+        rows = list(
+            client.query(
+                query
+            ).result()
+        )
+
+        return {
+            "success": True,
+
+            "data": [
+                {
+                    "order_date": str(
+                        row.order_date
+                    ),
+
+                    "total_revenue": float(
+                        row.total_revenue or 0
+                    ),
+                }
+
+                for row in rows
+            ],
+        }
+
+    except Exception as error:
+
+        print(
+            "Revenue over time error:",
+            error
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(error)
+        )
+
+
+# ============================================================
+# REVENUE BY PRODUCT
+# ============================================================
+
+@router.get("/revenue-by-product")
+def get_revenue_by_product():
+
+    try:
+
+        client = (
+            get_bigquery_client()
+        )
+
+        query = f"""
+            SELECT
+
+                p.product_name,
+
+                ROUND(
+                    COALESCE(
+                        SUM(
+                            o.quantity * o.price
+                        ),
+                        0
+                    ),
+                    2
+                ) AS total_revenue
+
+            FROM `{PROJECT_ID}.{DATASET}.products` p
+
+            LEFT JOIN
+                `{PROJECT_ID}.{DATASET}.orders` o
+
+            ON
+                p.product_id = o.product_id
+
+            GROUP BY
+                p.product_name
+
+            ORDER BY
+                total_revenue DESC
+        """
+
+        rows = list(
+            client.query(
+                query
+            ).result()
+        )
+
+        return {
+            "success": True,
+
+            "data": [
+                {
+                    "product_name": (
+                        row.product_name
+                    ),
+
+                    "total_revenue": float(
+                        row.total_revenue or 0
+                    ),
+                }
+
+                for row in rows
+            ],
+        }
+
+    except Exception as error:
+
+        print(
+            "Revenue by product error:",
+            error
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(error)
+        )
+
+
+# ============================================================
+# REVENUE BY CUSTOMER
+# ============================================================
+
+@router.get("/revenue-by-customer")
+def get_revenue_by_customer():
+
+    try:
+
+        client = (
+            get_bigquery_client()
+        )
+
+        query = f"""
+            SELECT
+
+                c.customer_id,
+
+                c.name AS customer_name,
+
+                ROUND(
+                    COALESCE(
+                        SUM(
+                            o.quantity * o.price
+                        ),
+                        0
+                    ),
+                    2
+                ) AS total_revenue
+
+            FROM
+                `{PROJECT_ID}.{DATASET}.customers` c
+
+            LEFT JOIN
+                `{PROJECT_ID}.{DATASET}.orders` o
+
+            ON
+                c.customer_id = o.customer_id
+
+            GROUP BY
+                c.customer_id,
+                c.name
+
+            ORDER BY
+                total_revenue DESC
+        """
+
+        rows = list(
+            client.query(
+                query
+            ).result()
+        )
+
+        return {
+            "success": True,
+
+            "data": [
+                {
+                    "customer_id": (
+                        row.customer_id
+                    ),
+
+                    "customer_name": (
+                        row.customer_name
+                    ),
+
+                    "total_revenue": float(
+                        row.total_revenue or 0
+                    ),
+                }
+
+                for row in rows
+            ],
+        }
+
+    except Exception as error:
+
+        print(
+            "Revenue by customer error:",
             error
         )
 

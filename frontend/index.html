@@ -152,9 +152,9 @@
                         <p>Current pipeline execution stages</p>
                     </div>
 
-                    <button id="runPipelineBtn" class="run-button">
+                    <!-- <button id="runPipelineBtn" class="run-button">
                         Run Pipeline
-                    </button>
+                    </button> -->
                 </div>
 
 
@@ -202,90 +202,39 @@
 
             </section>
 
-
             <!-- Charts -->
             <section class="charts-grid">
-
                 <div class="chart-card">
-
                     <div class="section-header">
                         <div>
                             <h2>Revenue Over Time</h2>
                             <p>Sales performance from BigQuery</p>
                         </div>
                     </div>
-
                     <div class="chart-placeholder">
-                        <div class="fake-chart">
-                            <span style="height: 30%"></span>
-                            <span style="height: 45%"></span>
-                            <span style="height: 40%"></span>
-                            <span style="height: 60%"></span>
-                            <span style="height: 90%"></span>
-                            <span style="height: 55%"></span>
-                            <span style="height: 40%"></span>
-                        </div>
-
-                        <div class="chart-labels">
-                            <span>Apr 1</span>
-                            <span>Apr 5</span>
-                            <span>Apr 10</span>
-                            <span>Apr 15</span>
-                            <span>Apr 20</span>
-                        </div>
+                        <div class="fake-chart" id="revenueChart"></div>
+                        <div class="chart-labels" id="revenueChartLabels"></div>
                     </div>
-
                 </div>
 
-
                 <div class="chart-card">
-
                     <div class="section-header">
                         <div>
                             <h2>Revenue by Product</h2>
                             <p>Top products by revenue</p>
                         </div>
                     </div>
+                    <div class="bar-chart" id="productChart"></div>
+                </div>
 
-                    <div class="bar-chart">
-
-                        <div class="bar-item">
-                            <span>Laptop</span>
-                            <div class="bar">
-                                <div style="width: 100%"></div>
-                            </div>
+                <div class="chart-card">
+                    <div class="section-header">
+                        <div>
+                            <h2>Revenue by Customer</h2>
+                            <p>Top customers by revenue</p>
                         </div>
-
-                        <div class="bar-item">
-                            <span>Smartphone</span>
-                            <div class="bar">
-                                <div style="width: 65%"></div>
-                            </div>
-                        </div>
-
-                        <div class="bar-item">
-                            <span>Headphones</span>
-                            <div class="bar">
-                                <div style="width: 30%"></div>
-                            </div>
-                        </div>
-
-                        <div class="bar-item">
-                            <span>Keyboard</span>
-                            <div class="bar">
-                                <div style="width: 18%"></div>
-                            </div>
-                        </div>
-
-                        <div class="bar-item">
-                            <span>Mouse</span>
-                            <div class="bar">
-                                <div style="width: 10%"></div>
-                            </div>
-                        </div>
-
                     </div>
-
+                    <div class="bar-chart" id="customerChart"></div>
                 </div>
 
             </section>
